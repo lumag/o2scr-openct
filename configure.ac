@@ -4,10 +4,10 @@ dnl Process this file with autoconf to produce a configure script.
 # Require autoconf 2.52
 AC_PREREQ(2.52)
 
-AC_INIT(LICENSE)
-AM_INIT_AUTOMAKE(openct, 0.6.2)
+AC_INIT(openct, 0.6.2)
+AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER(config.h)
-
+  
 AC_CONFIG_SRCDIR(src/ifd/ifdhandler.c)
 
 # LT Version numbers, remember to change them just *before* a release.
