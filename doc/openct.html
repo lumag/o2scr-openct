@@ -8,7 +8,7 @@
     <title>OpenCT Manual</title>
     <link rel="stylesheet" href="openct.css" type="text/css" />
     <meta name="generator"
-    content="DocBook XSL Stylesheets V1.64.1" />
+    content="DocBook XSL Stylesheets V1.66.1" />
   </head>
   <body>
     <div class="book" lang="en">
@@ -30,7 +30,6 @@
             </div>
           </div>
         </div>
-        <div></div>
         <hr />
       </div>
       <div class="toc">
@@ -158,7 +157,6 @@
               OpenCT</h2>
             </div>
           </div>
-          <div></div>
         </div>
         <p>This is OpenCT, a middleware framework for smart card
         terminals.</p>
@@ -208,7 +206,6 @@
               </a>Chapter&#160;2.&#160;Copyright and license</h2>
             </div>
           </div>
-          <div></div>
         </div>
         <p>Most of OpenCT is copyright by Olaf Kirch 
         <tt class="email">&lt;
@@ -226,7 +223,6 @@
               tokens</h2>
             </div>
           </div>
-          <div></div>
         </div>
         <div class="variablelist">
           <dl>
@@ -310,7 +306,6 @@
               </a>Chapter&#160;4.&#160;Requirements</h2>
             </div>
           </div>
-          <div></div>
         </div>
         <p>To use OpenCT with smart card readers attached to the
         serial port, you only need a kernel with a working serial
@@ -373,7 +368,6 @@ none    /proc/bus/usb   usbfs           defaults        0       0
               </a>Chapter&#160;5.&#160;Installation</h2>
             </div>
           </div>
-          <div></div>
         </div>
         <p>First, you need to build the OpenCT libraries and
         utilities. You do this by first invoking the configure
@@ -525,7 +519,6 @@ none    /proc/bus/usb   usbfs           defaults        0       0
               </a>Chapter&#160;6.&#160;Debugging</h2>
             </div>
           </div>
-          <div></div>
         </div>
         <p>Edit 
         <tt class="filename">openct.conf</tt>and set debug to
@@ -543,7 +536,6 @@ none    /proc/bus/usb   usbfs           defaults        0       0
               files and tools</h2>
             </div>
           </div>
-          <div></div>
         </div>
         <div class="toc">
           <p>
@@ -593,7 +585,6 @@ none    /proc/bus/usb   usbfs           defaults        0       0
                 </a>/var/run/openct - OpenCT status directory</h2>
               </div>
             </div>
-            <div></div>
           </div>
           <p>This directory holds status files for OpenCT. Create
           it with:</p>
@@ -635,7 +626,6 @@ chmod 750 /var/run/openct
                 </a>sbin/openct-control - OpenCT manager</h2>
               </div>
             </div>
-            <div></div>
           </div>
           <p>Run openct-control once to setup the 
           <tt class="filename">status</tt>file in 
@@ -674,7 +664,6 @@ shutdown - shutdown OpenCT
                 </a>sbin/ifdhandler - OpenCT device handler</h2>
               </div>
             </div>
-            <div></div>
           </div>
           <p>This app is called by openct-control to handle one
           device, e.g. a smart card reader or an USB token.</p>
@@ -707,7 +696,6 @@ usage: ifdhandler [-Hds] [-r reader] driver [device]
                 </a>bin/openct-tool</h2>
               </div>
             </div>
-            <div></div>
           </div>
           <p></p>
           <table border="0" bgcolor="#E0E0E0">
@@ -744,7 +732,6 @@ command: can be one of the following
                 </a>etc/openct.conf</h2>
               </div>
             </div>
-            <div></div>
           </div>
           <p></p>
           <table border="0" bgcolor="#E0E0E0">
@@ -842,7 +829,6 @@ driver  ccid {
               OpenCT via CT-API interface</h2>
             </div>
           </div>
-          <div></div>
         </div>
         <p>Install and configure the file 
         <tt class="filename">/etc/openct.conf</tt>as discussed.
@@ -858,7 +844,6 @@ driver  ccid {
               OpenCT via PC/SC Lite</h2>
             </div>
           </div>
-          <div></div>
         </div>
         <p>Install and configure the file 
         <tt class="filename">/etc/openct.conf</tt>as discussed.
@@ -890,7 +875,6 @@ CHANNELID        1
               applications using OpenCT</h2>
             </div>
           </div>
-          <div></div>
         </div>
         <p>OpenCT has a proprietary, but very easy to use
         interface. Take a look at the header files 
@@ -913,7 +897,6 @@ CHANNELID        1
               </a>Chapter&#160;11.&#160;Troubleshooting</h2>
             </div>
           </div>
-          <div></div>
         </div>
         <div class="toc">
           <p>
@@ -991,7 +974,6 @@ drwxr-xr-x    8 root     root         4096 2003-07-02 08:13 ../
                 devices</h2>
               </div>
             </div>
-            <div></div>
           </div>
           <p>Are you using an USB smart card reader or USB crypto
           token? What is it's USB vendor and product id? 
@@ -1021,7 +1003,6 @@ drwxr-xr-x    8 root     root         4096 2003-07-02 08:13 ../
               </a>Chapter&#160;12.&#160;Security</h2>
             </div>
           </div>
-          <div></div>
         </div>
         <p>The default setting is not very secure: all users can
         access your smart card readers. Several processes can use
