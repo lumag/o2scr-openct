@@ -79,67 +79,67 @@ full_localstatedir=`eval eval eval eval eval echo "${localstatedir}" | sed "s#NO
 
 AC_ARG_ENABLE(
 	[strict],
-	[AC_HELP_STRING([--enable-strict], [enable strict compile mode [[default=disabled]]])],
+	[AC_HELP_STRING([--enable-strict], [enable strict compile mode @<:@disabled@:>@])],
 	,
 	[enable_strict="no"]
 )
 
 AC_ARG_ENABLE(
 	[pedantic],
-	[AC_HELP_STRING([--enable-pedantic], [enable pedantic compile mode [[desfault=disabled]]])],
+	[AC_HELP_STRING([--enable-pedantic], [enable pedantic compile mode @<:@disabled@:>@])],
 	,
 	[enable_pedantic="no"]
 )
 
 AC_ARG_ENABLE(
 	[doc],
-	[AC_HELP_STRING([--enable-doc], [enable installation of documents. [[default=disabled]]])],
+	[AC_HELP_STRING([--enable-doc], [enable installation of documents. @<:@disabled@:>@])],
 	,
 	[enable_doc="no"]
 )
 
 AC_ARG_ENABLE(
 	[api-doc],
-	[AC_HELP_STRING([--enable-api-doc], [enable generation and installation of api documents. [[default=disabled]]])],
+	[AC_HELP_STRING([--enable-api-doc], [enable generation and installation of api documents. @<:@disabled@:>@])],
 	,
 	[enable_api_doc="no"]
 )
 
 AC_ARG_ENABLE(
 	[pcsc],
-	[AC_HELP_STRING([--enable-pcsc], [enable pcsc support. [[default=disabled]]])],
+	[AC_HELP_STRING([--enable-pcsc], [enable pcsc support. @<:@disabled@:>@])],
 	,
 	[enable_pcsc="no"]
 )
 
 AC_ARG_ENABLE(
 	[usb],
-	[AC_HELP_STRING([--enable-usb], [enable usb support. [[default=disabled]]])],
+	[AC_HELP_STRING([--enable-usb], [enable usb support. @<:@disabled@:>@])],
 	,
 	[enable_usb="no"]
 )
 
 AC_ARG_ENABLE(
 	[debug],
-	[AC_HELP_STRING([--enable-debug], [enable debug messages. [[default=no]]])],
+	[AC_HELP_STRING([--enable-debug], [enable debug messages. @<:@disabled@:>@])],
 	[test "${enableval}" = "yes" && AC_DEFINE([DEBUG], [1], [Enable debug messages.])]
 )
 
 AC_ARG_ENABLE(
 	[sunray],
-	[AC_HELP_STRING([--enable-sunray], [enable sunray support. [[default=no]]])],
+	[AC_HELP_STRING([--enable-sunray], [enable sunray support. @<:@disabled@:>@])],
 	[test "${enableval}" = "yes" && AC_DEFINE([sunray], [1], [Enable sunray support.])]
 )
 
 AC_ARG_ENABLE(
 	[sunrayclient],
-	[AC_HELP_STRING([--enable-sunrayclient], [enable sunray client support. [[default=no]]])],
+	[AC_HELP_STRING([--enable-sunrayclient], [enable sunray client support. @<:@disabled@:>@])],
 	[test "${enableval}" = "yes" && AC_DEFINE(sunrayclient, 1, [Enable sunray client support.])]
 )
 
 AC_ARG_WITH(
 	[bundle-dir],
-        [AC_HELP_STRING([--with-bundle-dir=PATH], [install bundle file for pcsc-lite to PATH [[not installed]]])],
+        [AC_HELP_STRING([--with-bundle-dir=PATH], [install bundle file for pcsc-lite to PATH @<:@not installed@:>@])],
         [
 		if test "${withval}" = "yes"; then
 			bundledir="\$(libdir)"
@@ -152,7 +152,7 @@ AC_ARG_WITH(
 
 AC_ARG_WITH(
 	[udev-dir],
-        [AC_HELP_STRING([--with-udev-dir=PATH], [install udev files into PATH [[not installed]]])],
+        [AC_HELP_STRING([--with-udev-dir=PATH], [install udev files into PATH @<:@not installed@:>@])],
         [
 		if test "${withval}" = "yes"; then
 			udevdir="\$(libdir)/udev"
@@ -165,7 +165,7 @@ AC_ARG_WITH(
 
 AC_ARG_WITH(
 	[hotplug-dir],
-        [AC_HELP_STRING([--with-hotplug-dir=PATH], [install hotplug files into PATH [[not installed]]])],
+        [AC_HELP_STRING([--with-hotplug-dir=PATH], [install hotplug files into PATH @<:@not installed@:>@])],
         [
 		if test "${withval}" = "yes"; then
 			hotplugdir="\$(sysconfdir)/hotplug/usb"
@@ -178,7 +178,7 @@ AC_ARG_WITH(
 
 AC_ARG_ENABLE(
 	[ifd-dir],
-	[AC_HELP_STRING([--with-ifd-dir], [ifd directory. [[default=/usr/lib/ifd]]])],
+	[AC_HELP_STRING([--with-ifd-dir], [ifd directory. @<:@/usr/lib/ifd@:>@])],
 	[ifddir="${withval}"],
 	[ifddir="${usrlibdir}/ifd"]
 )
