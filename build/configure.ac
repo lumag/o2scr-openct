@@ -192,6 +192,7 @@ AC_PROG_SED
 AC_PROG_MAKE_SET
 
 dnl Add libtool support.
+AM_PROG_CC_C_O
 AM_PROG_LIBTOOL
 
 AC_CHECK_PROGS([DOXYGEN],[doxygen])
