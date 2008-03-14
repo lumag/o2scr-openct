@@ -6,9 +6,9 @@ endif
 
 openct_ifd_la_SOURCES = pcsc.c
 openct_ifd_la_LDFLAGS = -module -avoid-version -no-undefined
-openct_ifd_la_LIBADD = $(OPTIONAL_PCSC_LIBS) $(top_srcdir)/src/ctapi/libopenctapi.la
+openct_ifd_la_LIBADD = $(PCSC_LIBS) $(top_srcdir)/src/ctapi/libopenctapi.la
 openct_ifd_la_CFLAGS = $(AM_CFLAGS) -I$(top_srcdir)/src/include -I$(top_srcdir)/src/ctapi \
-	$(OPTIONAL_PCSC_CFLAGS)
+	$(PCSC_CFLAGS)
 
 # Don't use ENABLE_BUNDLES for this case, pcsc-lite loads
 # USB drivers from MacOS X like bundles for all platforms
