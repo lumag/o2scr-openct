@@ -326,7 +326,7 @@ if test "${enable_usb}" = "yes"; then
 	PKG_CHECK_MODULES(
 		[LIBUSB],
 		[libusb],
-		[AC_DEFINE([HAVE_LIBUSB], [1], [Have libusb libraries and header files])],
+		[AC_DEFINE([ENABLE_LIBUSB], [1], [Have libusb libraries and header files])],
 		[AC_MSG_ERROR([Cannot detect libusb])]
 	)
 fi
@@ -344,49 +344,16 @@ if test "${enable_pcsc}" = "yes"; then
 			PKG_CHECK_MODULES(
 				[PCSC],
 				[libpcsclite],
-				[AC_DEFINE(HAVE_PCSC, 1, [Have PC/SC implementation])],
+				,
+				[AC_MSG_ERROR([Cannot locate pcsc-lite])]
 			)
 		;;
 	esac
-
-	saved_LIBS="$LIBS"
-	saved_CFLAGS="$CFLAGS"
-	CFLAGS="${CFLAGS} ${PCSC_CFLAGS}"
-	LIBS="${LIBS} ${PCSC_LIBS}"
-	AC_LINK_IFELSE(
-		[AC_LANG_PROGRAM([[
-#include <stdlib.h>
-#ifdef __APPLE__
-#include <PCSC/wintypes.h>
-#include <PCSC/winscard.h>
-#else
-#include <winscard.h>
-#endif
-
-void f (void) {
-	SCardControl(NULL, NULL, 0, NULL, NULL);
-}
-		]])],
-		[AC_DEFINE([HAVE_PCSC_OLD], [1], [old version of pc/sc-lite])]
-)
-
-	AC_CHECK_HEADER(
-		[reader.h],
-		[AC_DEFINE([HAVE_READER_H], [1], [Define if pcsc-lite with reader.h exists])],
-		[AC_MSG_WARN([reader.h not found, install pcsc-lite 1.2.9-beta8 or later, or use PCSC_CFLAGS=... ./configure])],
-		[#include <reader.h>]
-	)
-	CFLAGS="${saved_CFLAGS}"
-	LIBS="${saved_LIBS}"
 fi
 
 if test "${enable_usb}" = "yes"; then
 	OPTIONAL_LIBUSB_CFLAGS="${LIBUSB_CFLAGS}"
 	OPTIONAL_LIBUSB_LIBS="${LIBUSB_LIBS}"
-fi
-if test "${enable_pcsc}" = "yes"; then
-	OPTIONAL_PCSC_CFLAGS="${PCSC_CFLAGS}"
-	OPTIONAL_PCSC_LIBS="${PCSC_LIBS}"
 fi
 
 AC_DEFINE_UNQUOTED([OPENCT_CONF_PATH], ["${full_sysconfdir}/openct.conf"], [default config file for libopenct])
@@ -423,8 +390,6 @@ AC_SUBST([OPENCT_LT_REVISION])
 AC_SUBST([OPENCT_LT_AGE])
 AC_SUBST([OPTIONAL_LIBUSB_CFLAGS])
 AC_SUBST([OPTIONAL_LIBUSB_LIBS])
-AC_SUBST([OPTIONAL_PCSC_CFLAGS])
-AC_SUBST([OPTIONAL_PCSC_LIBS])
 
 AM_CONDITIONAL([SVN_CHECKOUT], [test "${svn_checkout}" = "yes"])
 AM_CONDITIONAL([ENABLE_DOC], [test "${enable_doc}" = "yes"])
