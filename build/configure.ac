@@ -17,12 +17,12 @@ OPENCT_VERSION_FIX="PACKAGE_VERSION_FIX"
 
 # LT Version numbers, remember to change them just *before* a release.
 #   (Code changed:                      REVISION++)
-#   (Interfaces added/removed/changed:  CURRENT++, REVISION=0)
-#   (Interfaces added:                  AGE++)
-#   (Interfaces removed:                AGE=0)
+#   (Oldest interface removed:          OLDEST++)
+#   (Interfaces added:                  CURRENT++, REVISION=0)
 OPENCT_LT_CURRENT="1"
+OPENCT_LT_OLDEST="1"
 OPENCT_LT_REVISION="0"
-OPENCT_LT_AGE="0"
+OPENCT_LT_AGE="$((${OPENCT_LT_CURRENT}-${OPENCT_LT_OLDEST}))"
 
 AC_CONFIG_SRCDIR(src/ifd/ifdhandler.c)
 
@@ -389,6 +389,7 @@ AC_SUBST([OPENCT_VERSION_FIX])
 AC_SUBST([OPENCT_LT_CURRENT])
 AC_SUBST([OPENCT_LT_REVISION])
 AC_SUBST([OPENCT_LT_AGE])
+AC_SUBST([OPENCT_LT_OLDEST])
 AC_SUBST([OPTIONAL_LIBUSB_CFLAGS])
 AC_SUBST([OPTIONAL_LIBUSB_LIBS])
 
