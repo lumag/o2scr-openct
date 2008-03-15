@@ -138,8 +138,8 @@ AC_ARG_ENABLE(
 )
 
 AC_ARG_WITH(
-	[bundle-dir],
-        [AC_HELP_STRING([--with-bundle-dir=PATH], [install bundle file for pcsc-lite to PATH @<:@not installed@:>@])],
+	[bundle],
+        [AC_HELP_STRING([--with-bundle=PATH], [install bundle file for pcsc-lite to PATH @<:@not installed@:>@])],
         [
 		if test "${withval}" = "yes"; then
 			bundledir="\$(libdir)"
@@ -151,8 +151,8 @@ AC_ARG_WITH(
 )
 
 AC_ARG_WITH(
-	[udev-dir],
-        [AC_HELP_STRING([--with-udev-dir=PATH], [install udev files into PATH @<:@not installed@:>@])],
+	[udev],
+        [AC_HELP_STRING([--with-udev=PATH], [install udev files into PATH @<:@not installed@:>@])],
         [
 		if test "${withval}" = "yes"; then
 			udevdir="\$(libdir)/udev"
@@ -164,8 +164,8 @@ AC_ARG_WITH(
 )
 
 AC_ARG_WITH(
-	[hotplug-dir],
-        [AC_HELP_STRING([--with-hotplug-dir=PATH], [install hotplug files into PATH @<:@not installed@:>@])],
+	[hotplug],
+        [AC_HELP_STRING([--with-hotplug=PATH], [install hotplug files into PATH @<:@not installed@:>@])],
         [
 		if test "${withval}" = "yes"; then
 			hotplugdir="\$(sysconfdir)/hotplug/usb"
@@ -177,8 +177,8 @@ AC_ARG_WITH(
 )
 
 AC_ARG_ENABLE(
-	[ifd-dir],
-	[AC_HELP_STRING([--with-ifd-dir], [ifd directory. @<:@/usr/lib/ifd@:>@])],
+	[ifddir],
+	[AC_HELP_STRING([--with-ifddir], [ifd directory. @<:@/usr/lib/ifd@:>@])],
 	[ifddir="${withval}"],
 	[ifddir="${usrlibdir}/ifd"]
 )
