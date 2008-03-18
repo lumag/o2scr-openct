@@ -429,7 +429,7 @@ AC_OUTPUT([
 
 cat <<EOF
 
-engine_pkcs11 has been configured with the following options:
+OpenCT has been configured with the following options:
 
 
 Version:                 ${PACKAGE_VERSION}
