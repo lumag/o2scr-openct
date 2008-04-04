@@ -44,7 +44,7 @@ ChangeLog:
 endif
 
 distclean-local:
-	rm -rf wiki.out wiki.tmp
+	-rm -rf wiki.out wiki.tmp
 
 maintainer-clean-local:
-	rm -rf "$(srcdir)/wiki.out"
+	-rm -rf "$(srcdir)/wiki.out"
