@@ -25,4 +25,4 @@ endif
 
 
 .in:
-	$(SED) -e "s#SBINDIR#$(sbindir)#g" -e "s#LIBDIR#$(libdir)#g" < $^ > $@
+	$(SED) -e "s#SBINDIR#$(sbindir)#g" -e "s#LIBDIR#$(libdir)#g" < "$^" > "$@"
