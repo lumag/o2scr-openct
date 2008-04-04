@@ -1,3 +1,3 @@
-MAINTAINERCLEANFILES = Makefile.in
+MAINTAINERCLEANFILES = $(srcdir)/Makefile.in
 
 SUBDIRS = openct

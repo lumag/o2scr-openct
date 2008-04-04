@@ -1,4 +1,4 @@
-MAINTAINERCLEANFILES = Makefile.in
+MAINTAINERCLEANFILES = $(srcdir)/Makefile.in
 
 noinst_LTLIBRARIES = libifd.la
 sbin_PROGRAMS = ifdhandler ifdproxy
@@ -22,14 +22,20 @@ libifd_la_SOURCES = \
 	\
 	ria.c
 # new driver not working yet: ifd-wbeiuu.c
-libifd_la_LIBADD = $(top_srcdir)/src/ct/libopenct.la $(LTLIB_LIBS) $(OPTIONAL_LIBUSB_LIBS)
-libifd_la_CFLAGS = $(AM_CFLAGS) -I$(top_srcdir)/src/include \
+libifd_la_LIBADD = $(top_builddir)/src/ct/libopenct.la $(LTLIB_LIBS) $(OPTIONAL_LIBUSB_LIBS)
+libifd_la_CFLAGS = $(AM_CFLAGS) \
+	-I$(top_srcdir)/src/include \
+	-I$(top_builddir)/src/include \
 	$(OPTIONAL_PCSC_CFLAGS) $(OPTIONAL_LIBUSB_CFLAGS) $(LTLIB_CFLAGS)
 
 ifdhandler_SOURCES = ifdhandler.c
 ifdhandler_LDADD = libifd.la
-ifdhandler_CFLAGS = $(AM_CFLAGS) -I$(top_srcdir)/src/include
+ifdhandler_CFLAGS = $(AM_CFLAGS) \
+	-I$(top_srcdir)/src/include \
+	-I$(top_builddir)/src/include
 
 ifdproxy_SOURCES = ifdproxy.c ria-device.c ria-server.c
 ifdproxy_LDADD = libifd.la
-ifdproxy_CFLAGS = $(AM_CFLAGS) -I$(top_srcdir)/src/include
+ifdproxy_CFLAGS = $(AM_CFLAGS) \
+	-I$(top_srcdir)/src/include \
+	-I$(top_builddir)/src/include

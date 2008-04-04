@@ -147,7 +147,7 @@ AC_ARG_WITH(
 			bundledir="${withval}"
 		fi
 	],
-	[bundledir="no"]
+	[bundledir=""]
 )
 
 AC_ARG_WITH(
@@ -160,7 +160,7 @@ AC_ARG_WITH(
 			udevdir="${withval}"
 		fi
 	],
-	[udevdir="no"]
+	[udevdir=""]
 )
 
 AC_ARG_WITH(
@@ -173,10 +173,10 @@ AC_ARG_WITH(
 			hotplugdir="${withval}"
 		fi
 	],
-	[hotplugdir="no"]
+	[hotplugdir=""]
 )
 
-AC_ARG_ENABLE(
+AC_ARG_WITH(
 	[ifddir],
 	[AC_HELP_STRING([--with-ifddir], [ifd directory. @<:@/usr/lib/ifd@:>@])],
 	[ifddir="${withval}"],
@@ -402,9 +402,9 @@ AC_SUBST([OPTIONAL_LIBUSB_LIBS])
 AM_CONDITIONAL([SVN_CHECKOUT], [test "${svn_checkout}" = "yes"])
 AM_CONDITIONAL([ENABLE_DOC], [test "${enable_doc}" = "yes"])
 AM_CONDITIONAL([ENABLE_API_DOC], [test "${enable_api_doc}" = "yes"])
-AM_CONDITIONAL([ENABLE_BUNDLES], [test "${bundledir}" != "no"])
-AM_CONDITIONAL([ENABLE_UDEV], [test "${udevdir}" != "no"])
-AM_CONDITIONAL([ENABLE_HOTPLUG], [test "${hotplugdir}" != "no"])
+AM_CONDITIONAL([ENABLE_BUNDLES], [test -n "${bundledir}"])
+AM_CONDITIONAL([ENABLE_UDEV], [test -n "${udevdir}"])
+AM_CONDITIONAL([ENABLE_HOTPLUG], [test -n "${hotplugdir}"])
 AM_CONDITIONAL([ENABLE_PCSC], [test "${enable_pcsc}" = "yes"])
 
 AC_OUTPUT([

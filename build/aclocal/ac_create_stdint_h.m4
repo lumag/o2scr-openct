@@ -38,6 +38,8 @@ dnl @author  Guido Draheim <guidod@gmx.de>
 
 AC_DEFUN([AC_CREATE_STDINT_H],
 [# ------ AC CREATE STDINT H -------------------------------------
+AC_PROG_MKDIR_P
+AC_PROG_SED
 AC_MSG_CHECKING([for stdint-types....])
 ac_stdint_h=`echo ifelse($1, , _stdint.h, $1)`
 if test "$ac_stdint_h" = "stdint.h" ; then
@@ -102,6 +104,7 @@ fi
 # ----------------- DONE inttypes.h checks START header -------------
 _ac_stdint_h=AS_TR_CPP(_$ac_stdint_h)
 AC_MSG_RESULT(creating $ac_stdint_h : $_ac_stdint_h)
+${MKDIR_P} $(echo "${ac_stdint_h}" | ${SED} 's/[[^/]]*$//') 2> /dev/null
 echo "#ifndef" $_ac_stdint_h >$ac_stdint_h
 echo "#define" $_ac_stdint_h "1" >>$ac_stdint_h
 echo "#ifndef" _GENERATED_STDINT_H >>$ac_stdint_h
