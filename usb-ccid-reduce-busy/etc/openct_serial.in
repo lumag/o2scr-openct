@@ -1,0 +1,11 @@
+#!/bin/sh
+
+test "$ACTION" = "add" || exit 0
+test -n "$DEVNAME" || exit 0 
+test -e "@OPENCT_SOCKET_PATH@/status" || exit 0
+
+if [ -n "$DEVNAME" ]
+then
+	@sbindir@/openct-control attach ccid serial $DEVNAME
+	exit 0
+fi
