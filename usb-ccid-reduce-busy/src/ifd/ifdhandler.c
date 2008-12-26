@@ -41,6 +41,7 @@ static void usage(int exval);
 static void version(void);
 static void ifdhandler_run(ifd_reader_t *);
 static int ifdhandler_poll_presence(ct_socket_t *, struct pollfd *);
+static int ifdhandler_event(ct_socket_t * sock);
 static int ifdhandler_accept(ct_socket_t *);
 static int ifdhandler_recv(ct_socket_t *);
 static int ifdhandler_send(ct_socket_t *);
@@ -226,8 +227,18 @@ static void ifdhandler_run(ifd_reader_t * reader)
 
 	/* Encapsulate the reader into a socket struct */
 	sock = ct_socket_new(0);
-	sock->fd = 0x7FFFFFFF;
-	sock->poll = ifdhandler_poll_presence;
+	sock->fd = ifd_get_eventfd(reader);
+	if (sock->fd == -1) {
+		sock->fd = 0x7FFFFFFF;
+		sock->poll = ifdhandler_poll_presence;
+	}
+	else {
+		sock->send = ifdhandler_event;
+		sock->events = POLLOUT;
+		ifd_before_command(reader);
+		ifd_poll(reader);
+		ifd_after_command(reader);
+	}
 	sock->user_data = reader;
 	ct_mainloop_add_socket(sock);
 
@@ -242,6 +253,13 @@ static void ifdhandler_run(ifd_reader_t * reader)
 	exit(0);
 }
 
+static void exit_on_device_disconnect(ifd_reader_t *reader)
+{
+	ifd_debug(1, "Reader %s detached", reader->name);
+	memset(reader->status, 0, sizeof(*reader->status));
+	exit(0);
+}
+
 /*
  * Poll for presence of hotplug device
  */
@@ -249,56 +267,28 @@ static int ifdhandler_poll_presence(ct_socket_t * sock, struct pollfd *pfd)
 {
 	ifd_reader_t *reader = (ifd_reader_t *) sock->user_data;
 	ifd_device_t *dev = reader->device;
-	unsigned int n;
 
-	/* Check if the card status changed */
-	for (n = 0; n < reader->nslots; n++) {
-		static unsigned int card_seq = 1;
-		unsigned int prev_seq, new_seq;
-		ct_info_t *info;
-		time_t now;
-		int rc, status;
-
-		time(&now);
-		if (now < reader->slot[n].next_update)
-			continue;
-
-		/* Poll card status at most once a second
-		 * XXX: make this configurable */
-		reader->slot[n].next_update = now + 1;
-
-		if ((rc = ifd_card_status(reader, n, &status)) < 0) {
-			/* Don't return error; let the hotplug test
-			 * pick up the detach
-			 if (rc == IFD_ERROR_DEVICE_DISCONNECTED)
-			 return rc;
-			 */
-			continue;
-		}
-
-		info = reader->status;
-		new_seq = prev_seq = info->ct_card[n];
-		if (!(status & IFD_CARD_PRESENT))
-			new_seq = 0;
-		else if (!prev_seq || (status & IFD_CARD_STATUS_CHANGED)) {
-			new_seq = card_seq++;
-		}
-
-		if (prev_seq != new_seq) {
-			ifd_debug(1, "card status change: %u -> %u",
-				  prev_seq, new_seq);
-			info->ct_card[n] = new_seq;
-			ct_status_update(info);
-		}
-	}
+	ifd_poll(reader);
 
 	if (dev->hotplug && ifd_device_poll_presence(dev, pfd) == 0) {
-		ifd_debug(1, "Reader %s detached", reader->name);
-		memset(reader->status, 0, sizeof(*reader->status));
-		exit(0);
+		exit_on_device_disconnect(reader);
 	}
 
 	return 1;
+}
+
+/*
+ * Receive data from client
+ */
+static int ifdhandler_event(ct_socket_t * sock)
+{
+	ifd_reader_t *reader = (ifd_reader_t *) sock->user_data;
+
+	if (ifd_event(reader) < 0) {
+		exit_on_device_disconnect(reader);
+	}
+
+	return 0;
 }
 
 /*

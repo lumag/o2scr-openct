@@ -158,6 +158,14 @@ int ifd_sysdep_usb_poll_presence(ifd_device_t * dev, struct pollfd *pfd)
 }
 
 /*
+ * Event fd to use.
+ */
+int ifd_sysdep_usb_get_eventfd(ifd_device_t * dev)
+{
+	return dev->fd;
+}
+
+/*
  * USB control command
  */
 int ifd_sysdep_usb_control(ifd_device_t * dev, unsigned int requesttype,
@@ -301,6 +309,45 @@ int ifd_sysdep_usb_begin_capture(ifd_device_t * dev, int type, int endpoint,
 	return 0;
 }
 
+int ifd_sysdep_usb_capture_event(ifd_device_t * dev, ifd_usb_capture_t * cap,
+			   void *buffer, size_t len)
+{
+	struct usbdevfs_urb *purb;
+	size_t copied = 0;
+	int rc = 0;
+
+	purb = NULL;
+	rc = ioctl(dev->fd, USBDEVFS_REAPURBNDELAY, &purb);
+	if (rc < 0) {
+		if (errno == EAGAIN)
+			return 0;
+		ct_error("usb_reapurb failed: %m");
+		return IFD_ERROR_COMM_ERROR;
+	}
+
+	if (purb != &cap->urb) {
+		ifd_debug(2, "reaped usb urb %p", purb);
+		return 0;
+	}
+
+	if (purb->actual_length) {
+		ifd_debug(6, "usb reapurb: len=%u",
+			  purb->actual_length);
+		if ((copied = purb->actual_length) > len)
+			copied = len;
+		if (copied && buffer)
+			memcpy(buffer, purb->buffer, copied);
+	}
+	else {
+		usleep(10000);
+	}
+
+	/* Re-submit URB */
+	usb_submit_urb(dev->fd, cap);
+
+	return copied;
+}
+
 int ifd_sysdep_usb_capture(ifd_device_t * dev, ifd_usb_capture_t * cap,
 			   void *buffer, size_t len, long timeout)
 {
@@ -325,33 +372,11 @@ int ifd_sysdep_usb_capture(ifd_device_t * dev, ifd_usb_capture_t * cap,
 		if (poll(&pfd, 1, wait) != 1)
 			continue;
 
-		purb = NULL;
-		rc = ioctl(dev->fd, USBDEVFS_REAPURBNDELAY, &purb);
+		rc = ifd_sysdep_usb_capture_event(dev, cap, buffer, len);
 		if (rc < 0) {
-			if (errno == EAGAIN)
-				continue;
-			ct_error("usb_reapurb failed: %m");
-			return IFD_ERROR_COMM_ERROR;
+			return rc;
 		}
-
-		if (purb != &cap->urb) {
-			ifd_debug(2, "reaped usb urb %p", purb);
-			continue;
-		}
-
-		if (purb->actual_length) {
-			ifd_debug(6, "usb reapurb: len=%u",
-				  purb->actual_length);
-			if ((copied = purb->actual_length) > len)
-				copied = len;
-			if (copied && buffer)
-				memcpy(buffer, purb->buffer, copied);
-		} else {
-			usleep(10000);
-		}
-
-		/* Re-submit URB */
-		usb_submit_urb(dev->fd, cap);
+		copied = (size_t)rc;
 	} while (!copied);
 
 	return copied;
@@ -378,7 +403,7 @@ int ifd_sysdep_usb_end_capture(ifd_device_t * dev, ifd_usb_capture_t * cap)
 
 int ifd_sysdep_usb_open(const char *device)
 {
-        return open(device, O_RDWR);
+	return open(device, O_RDWR);
 }
 
 #ifndef ENABLE_LIBUSB
