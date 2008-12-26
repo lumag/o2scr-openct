@@ -97,6 +97,7 @@ extern int		ifd_device_id_parse(const char *, ifd_devid_t *);
 extern int		ifd_device_id_match(const ifd_devid_t *,
 				const ifd_devid_t *);
 
+extern int		ifd_usb_get_eventfd(ifd_device_t *);
 extern int		ifd_usb_control(ifd_device_t *,
 				unsigned int requesttype,
 				unsigned int request,
@@ -108,6 +109,9 @@ extern int		ifd_usb_begin_capture(ifd_device_t *,
 				int type, int endpoint,
 				size_t maxpacket,
 				ifd_usb_capture_t **);
+extern int		ifd_usb_capture_event(ifd_device_t *,
+				ifd_usb_capture_t *,
+				void *buffer, size_t len);
 extern int		ifd_usb_capture(ifd_device_t *,
 				ifd_usb_capture_t *,
 				void *buffer, size_t len,
