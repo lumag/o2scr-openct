@@ -90,6 +90,7 @@ int ifd_spawn_handler(const char *driver, const char *devtype, int idx)
 	int argc, n;
 	pid_t pid;
 	char *user = NULL;
+	int force_poll = 0;
 
 	ifd_debug(1, "driver=%s, devtype=%s, index=%d", driver, devtype, idx);
 
@@ -126,6 +127,12 @@ int ifd_spawn_handler(const char *driver, const char *devtype, int idx)
 			debug[n + 1] = 'd';
 		debug[0] = '-';
 		argv[argc++] = debug;
+	}
+
+	if (ifd_conf_get_bool("ifdhandler.force_poll", &force_poll) >= 0) {
+		if (force_poll) {
+			argv[argc++] = "-p";
+		}
 	}
 
 	type = strdup(devtype);
