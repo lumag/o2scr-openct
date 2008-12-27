@@ -330,6 +330,10 @@ int ifd_sysdep_usb_capture_event(ifd_device_t * dev, ifd_usb_capture_t * cap,
 		return 0;
 	}
 
+	if (purb->status == -1) {
+		return IFD_ERROR_COMM_ERROR;
+	}
+
 	if (purb->actual_length) {
 		ifd_debug(6, "usb reapurb: len=%u",
 			  purb->actual_length);
