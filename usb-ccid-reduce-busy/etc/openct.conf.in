@@ -8,6 +8,7 @@ hotplug	= yes;
 # Path to ifdhandler
 ifdhandler {
 	program		= @sbindir@/ifdhandler;
+	force_poll	= 0;
 @ENABLE_NON_PRIVILEGED@	user		= @daemon_user@;
 @ENABLE_NON_PRIVILEGED@	groups = {
 @ENABLE_NON_PRIVILEGED@		@daemon_groups@,

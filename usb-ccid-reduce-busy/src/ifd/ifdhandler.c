@@ -35,6 +35,7 @@ static int opt_debug = 0;
 static int opt_hotplug = 0;
 static int opt_foreground = 0;
 static int opt_info = 0;
+static int opt_poll = 0;
 static const char *opt_reader = NULL;
 
 static void usage(int exval);
@@ -58,7 +59,7 @@ int main(int argc, char **argv)
 	/* Make sure the mask is good */
 	umask(033);
 
-	while ((c = getopt(argc, argv, "dFHhvir:s")) != -1) {
+	while ((c = getopt(argc, argv, "dFHhvipr:s")) != -1) {
 		switch (c) {
 		case 'd':
 			opt_debug++;
@@ -71,6 +72,9 @@ int main(int argc, char **argv)
 			break;
 		case 'i':
 			opt_info = 1;
+			break;
+		case 'p':
+			opt_poll = 1;
 			break;
 		case 'r':
 			opt_reader = optarg;
@@ -227,7 +231,12 @@ static void ifdhandler_run(ifd_reader_t * reader)
 
 	/* Encapsulate the reader into a socket struct */
 	sock = ct_socket_new(0);
-	sock->fd = ifd_get_eventfd(reader);
+	if (opt_poll) {
+		sock->fd = -1;
+	}
+	else {
+		sock->fd = ifd_get_eventfd(reader);
+	}
 	if (sock->fd == -1) {
 		sock->fd = 0x7FFFFFFF;
 		sock->poll = ifdhandler_poll_presence;
@@ -432,6 +441,7 @@ static void usage(int exval)
 		"  -r   specify index of reader\n"
 		"  -F   stay in foreground\n"
 		"  -H   hotplug device, monitor for detach\n"
+		"  -p   force polling device even if events supported\n"
 		"  -s   send error and debug messages to syslog\n"
 		"  -d   enable debugging; repeat to increase verbosity\n"
 		"  -i   display list of available drivers and protocols\n"
