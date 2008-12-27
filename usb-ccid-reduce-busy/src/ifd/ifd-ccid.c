@@ -218,6 +218,7 @@ typedef struct ccid_status {
 	size_t slen[OPENCT_MAX_SLOTS];
 	unsigned char seq;
 	int support_events;
+	int events_active;
 	ifd_usb_capture_t *event_cap;
 } ccid_status_t;
 
@@ -771,12 +772,7 @@ static int ccid_open_usb(ifd_device_t * dev, ifd_reader_t * reader)
 	 */
 	ifd_sysdep_usb_reset(dev);
 
-	/*
-	 * Support event only if lowlevel support this too
-	 */
-	if (support_events && ifd_usb_get_eventfd(reader->device) != -1) {
-		st->support_events = support_events;
-	}
+	st->support_events = support_events;
 
 	ifd_debug(3, "Accepted %04x:%04x with features 0x%x and protocols 0x%x events=%d", de.idVendor, de.idProduct, ccid.dwFeatures, ccid.dwProtocols, st->support_events);
 	return 0;
@@ -1332,7 +1328,7 @@ static int ccid_before_command(ifd_reader_t * reader)
 
 	ifd_debug(1, "called.");
 
-	if (!st->support_events) {
+	if (!st->events_active) {
 		return 0;
 	}
 
@@ -1352,7 +1348,7 @@ static int ccid_after_command(ifd_reader_t * reader)
 
 	ifd_debug(1, "called.");
 
-	if (!st->support_events) {
+	if (!st->events_active) {
 		return 0;
 	}
 
@@ -1371,6 +1367,7 @@ static int ccid_after_command(ifd_reader_t * reader)
 static int ccid_get_eventfd(ifd_reader_t * reader)
 {
 	ccid_status_t *st = (ccid_status_t *) reader->driver_data;
+	int fd;
 
 	ifd_debug(1, "called.");
 
@@ -1378,7 +1375,13 @@ static int ccid_get_eventfd(ifd_reader_t * reader)
 		return -1;
 	}
 
-	return ifd_usb_get_eventfd(reader->device);
+	fd = ifd_usb_get_eventfd(reader->device);
+
+	if (fd != -1) {
+		st->events_active = 1;
+	}
+
+	return fd;
 }
 
 static int ccid_event(ifd_reader_t * reader, int *status, size_t status_size)
