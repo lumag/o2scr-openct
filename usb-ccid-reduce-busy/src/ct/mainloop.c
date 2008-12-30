@@ -100,6 +100,12 @@ void ct_mainloop(void)
 				continue;
 			}
 
+			if (pfd[n].revents & POLLERR) {
+				if (sock->error(sock) < 0) {
+					ct_socket_free(sock);
+					continue;
+				}
+			}
 			if (pfd[n].revents & POLLOUT) {
 				if (sock->send(sock) < 0) {
 					ct_socket_free(sock);

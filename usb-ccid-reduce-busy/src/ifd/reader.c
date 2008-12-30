@@ -649,6 +649,15 @@ void ifd_poll(ifd_reader_t *reader)
 	}
 }
 
+int ifd_error(ifd_reader_t *reader)
+{
+	if (reader->driver->ops->error == NULL) {
+		return IFD_ERROR_NOT_SUPPORTED;
+	}
+
+	return reader->driver->ops->error(reader);
+}
+
 int ifd_event(ifd_reader_t *reader)
 {
 	int status[OPENCT_MAX_SLOTS];
