@@ -44,6 +44,7 @@ static void ifdhandler_run(ifd_reader_t *);
 static int ifdhandler_poll_presence(ct_socket_t *, struct pollfd *);
 static int ifdhandler_event(ct_socket_t * sock);
 static int ifdhandler_accept(ct_socket_t *);
+static int ifdhandler_error(ct_socket_t *);
 static int ifdhandler_recv(ct_socket_t *);
 static int ifdhandler_send(ct_socket_t *);
 static void ifdhandler_close(ct_socket_t *);
@@ -242,8 +243,9 @@ static void ifdhandler_run(ifd_reader_t * reader)
 		sock->poll = ifdhandler_poll_presence;
 	}
 	else {
+		sock->error = ifdhandler_error;
 		sock->send = ifdhandler_event;
-		sock->events = POLLOUT;
+		sock->events = POLLOUT | POLLERR;
 		ifd_before_command(reader);
 		ifd_poll(reader);
 		ifd_after_command(reader);
@@ -284,6 +286,20 @@ static int ifdhandler_poll_presence(ct_socket_t * sock, struct pollfd *pfd)
 	}
 
 	return 1;
+}
+
+/*
+ * Error from socket
+ */
+static int ifdhandler_error(ct_socket_t * sock)
+{
+	ifd_reader_t *reader = (ifd_reader_t *) sock->user_data;
+
+	if (ifd_error(reader) < 0) {
+		exit_on_device_disconnect(reader);
+	}
+
+	return 0;
 }
 
 /*

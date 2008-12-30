@@ -361,6 +361,17 @@ struct ifd_driver_ops {
 	 * @return Error code <0 if failure, 0 if success.
 	 */
 	int (*event) (ifd_reader_t *, int *status, size_t status_size);
+
+	/**
+	 * Error callback.
+	 *
+	 * Will be called if an error is set on event fd.
+	 * May be NULL if unsupported.
+	 *
+	 * @return Error code <0 if failure, 0 if success. If reader
+	 * should be freed, return an error.
+	 */
+	int (*error) (ifd_reader_t *);
 };
 
 extern void		ifd_driver_register(const char *,

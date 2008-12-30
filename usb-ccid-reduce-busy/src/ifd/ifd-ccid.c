@@ -1400,9 +1400,6 @@ static int ccid_event(ifd_reader_t * reader, int *status, size_t status_size)
 	if (bytes < 0) {
 		return bytes;
 	}
-	else if (bytes == 0) {
-		return IFD_ERROR_DEVICE_DISCONNECTED;
-	}
 
 	if (bytes > 0 && ret[0] == 0x50) {
 		int slot;
@@ -1424,6 +1421,12 @@ static int ccid_event(ifd_reader_t * reader, int *status, size_t status_size)
 	}
 
 	return 0;
+}
+
+static int ccid_error(ifd_reader_t * reader)
+{
+	(void)reader;
+	return IFD_ERROR_DEVICE_DISCONNECTED;
 }
 
 /*
@@ -1451,6 +1454,7 @@ void ifd_ccid_register(void)
 	ccid_driver.after_command = ccid_after_command;
 	ccid_driver.get_eventfd = ccid_get_eventfd;
 	ccid_driver.event = ccid_event;
+	ccid_driver.error = ccid_error;
 
 	ifd_driver_register("ccid", &ccid_driver);
 }
