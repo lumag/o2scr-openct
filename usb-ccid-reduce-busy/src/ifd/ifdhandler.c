@@ -239,10 +239,12 @@ static void ifdhandler_run(ifd_reader_t * reader)
 		sock->fd = ifd_get_eventfd(reader);
 	}
 	if (sock->fd == -1) {
+		ifd_debug(1, "events inactive for reader %s", reader->name);
 		sock->fd = 0x7FFFFFFF;
 		sock->poll = ifdhandler_poll_presence;
 	}
 	else {
+		ifd_debug(1, "events active for reader %s", reader->name);
 		sock->error = ifdhandler_error;
 		sock->send = ifdhandler_event;
 		sock->events = POLLOUT | POLLERR;
