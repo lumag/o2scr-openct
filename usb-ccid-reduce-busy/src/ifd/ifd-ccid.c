@@ -1426,6 +1426,9 @@ static int ccid_event(ifd_reader_t * reader, int *status, size_t status_size)
 static int ccid_error(ifd_reader_t * reader)
 {
 	(void)reader;
+
+	ifd_debug(1, "called.");
+
 	return IFD_ERROR_DEVICE_DISCONNECTED;
 }
 
