@@ -427,9 +427,7 @@ int ifd_sysdep_usb_open(const char *device)
 	 * =linux-2.6.28 - CONFIG_USB_DEVICEFS must be on.
 	 * >=linux-2.6.29 - works.
 	 */
-	if (sigaction(USB_DISCONNECT_SIGNAL, NULL, &act) == -1) {
-		goto cleanup;
-	}
+	memset(&act, 0, sizeof(act));
 	act.sa_handler = SIG_IGN;
 	if (sigaction(USB_DISCONNECT_SIGNAL, &act, NULL) == -1) {
 		goto cleanup;
