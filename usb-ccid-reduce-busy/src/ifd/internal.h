@@ -66,6 +66,8 @@ struct ifd_device_ops {
 
 	void (*close) (ifd_device_t *);
 
+	int (*get_eventfd) (ifd_device_t *);
+
 	/* Poll for device presence. This function is called
 	 * prior to the poll call (with revents == 0), in this
 	 * case poll_presence is supposed to set up the poll
