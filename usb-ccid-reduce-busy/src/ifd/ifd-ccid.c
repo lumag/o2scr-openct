@@ -1374,7 +1374,7 @@ static int ccid_get_eventfd(ifd_reader_t * reader)
 		return -1;
 	}
 
-	fd = ifd_usb_get_eventfd(reader->device);
+	fd = ifd_device_get_eventfd(reader->device);
 
 	if (fd != -1) {
 		st->events_active = 1;

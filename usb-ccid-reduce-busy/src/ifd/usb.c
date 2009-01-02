@@ -11,14 +11,6 @@
 #include <fcntl.h>
 
 /*
- * Get device eventfd
- */
-int ifd_usb_get_eventfd(ifd_device_t * dev)
-{
-	return ifd_sysdep_usb_get_eventfd(dev);
-}
-
-/*
  * Send/receive USB control block
  */
 int ifd_usb_control(ifd_device_t * dev, unsigned int requesttype,
@@ -207,6 +199,15 @@ static int usb_reset(ifd_device_t * dev)
 	return rc;
 }
 
+static int usb_get_eventfd(ifd_device_t * dev)
+{
+	int rc;
+
+	rc = ifd_sysdep_usb_get_eventfd(dev);
+
+	return rc;
+}
+
 static struct ifd_device_ops ifd_usb_ops;
 
 /*
@@ -227,6 +228,7 @@ ifd_device_t *ifd_open_usb(const char *device)
 	ifd_usb_ops.send = usb_send;
 	ifd_usb_ops.recv = usb_recv;
 	ifd_usb_ops.reset = usb_reset;
+	ifd_usb_ops.get_eventfd = usb_get_eventfd;
 
 	dev = ifd_device_new(device, &ifd_usb_ops, sizeof(*dev));
 	dev->type = IFD_DEVICE_TYPE_USB;

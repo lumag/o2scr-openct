@@ -149,7 +149,7 @@ static int et_get_eventfd(ifd_reader_t * reader)
 {
 	ifd_debug(1, "called.");
 
-	return ifd_usb_get_eventfd(reader->device);
+	return ifd_device_get_eventfd(reader->device);
 }
 
 static int et_event(ifd_reader_t * reader, int *status, size_t status_size)
