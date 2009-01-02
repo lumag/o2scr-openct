@@ -144,11 +144,18 @@ static int usb_set_params(ifd_device_t * dev,
 	if (params->usb.interface != -1) {
 		if (ifd_sysdep_usb_claim_interface(dev, params->usb.interface))
 			return -1;
+#if 0
+		/*
+		 * This causes subsequent activation
+		 * of the process to fail comminicating with
+		 * the device.
+		 */
 		if (params->usb.altsetting != -1
 		    && ifd_sysdep_usb_set_interface(dev,
 						    params->usb.interface,
 						    params->usb.altsetting))
 			return -1;
+#endif
 	}
 
 	dev->settings = *params;
