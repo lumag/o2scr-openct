@@ -335,8 +335,10 @@ static int ccid_command(ifd_reader_t * reader, const unsigned char *cmd,
 		ifd_debug(3, "sending:%s", ct_hexdump(cmd, cmd_len));
 
 	rc = ifd_device_send(reader->device, cmd, cmd_len);
-	if (rc < 0)
+	if (rc < 0) {
+		ifd_debug(1, "ifd_device_send failed %d", rc);
 		return rc;
+	}
 	while (1) {
 		rc = ifd_device_recv(reader->device, res, req_len, 10000);
 		if (rc < 0)
@@ -760,18 +762,6 @@ static int ccid_open_usb(ifd_device_t * dev, ifd_reader_t * reader)
 		reader->nslots++;	/* one virtual slot for RFID escape */
 		st->proto_support |= SUPPORT_ESCAPE;
 	}
-
-	/*
-	 * TODO Figure out why this is needed.
-	 * For some strange reason the card status command
-	 * gets timeout.
-	 * Maybe so far this was not visible as the poll
-	 * mode succeeded finally in doing so.
-	 * I could not find that it has something with
-	 * events.
-	 */
-	ifd_debug(3, "USB reset workaround");
-	ifd_sysdep_usb_reset(dev);
 
 	st->support_events = support_events;
 
