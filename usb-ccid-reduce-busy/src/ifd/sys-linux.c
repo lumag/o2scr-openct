@@ -145,6 +145,8 @@ struct usbdevfs_hub_portinfo {
 
 /* end of import from usbdevice_fs.h */
 
+#define USB_DISCONNECT_SIGNAL (SIGRTMIN)
+
 /*
  * Poll for presence of USB device
  */
@@ -407,7 +409,48 @@ int ifd_sysdep_usb_end_capture(ifd_device_t * dev, ifd_usb_capture_t * cap)
 
 int ifd_sysdep_usb_open(const char *device)
 {
-	return open(device, O_RDWR);
+	struct usbdevfs_disconnectsignal ds;
+	struct sigaction act;
+	int fd = -1;
+	int ret = -1;
+
+	fd = open(device, O_RDWR);
+	if (fd == -1) {
+		goto cleanup;
+	}
+
+	/*
+	 * The following will send signal
+	 * to the process when device is disconnected
+	 * even if the signal is ignored the blocking
+	 * call will exit.
+	 * <linux.2.6.28 - This code will have no affect.
+	 * =linux-2.6.28 - CONFIG_USB_DEVICEFS must be on.
+	 * >=linux-2.6.29 - works.
+	 */
+	if (sigaction(USB_DISCONNECT_SIGNAL, NULL, &act) == -1) {
+		goto cleanup;
+	}
+	act.sa_handler = SIG_IGN;
+	if (sigaction(USB_DISCONNECT_SIGNAL, &act, NULL) == -1) {
+		goto cleanup;
+	}
+
+	memset(&ds, 0, sizeof(ds));
+	ds.signr = USB_DISCONNECT_SIGNAL;
+	if (ioctl(fd, USBDEVFS_DISCSIGNAL, &ds) == -1) {
+		goto cleanup;
+	}
+
+	ret = fd;
+	fd = -1;
+
+cleanup:
+	if (fd != -1) {
+		close(fd);
+	}
+
+	return ret;
 }
 
 #ifndef ENABLE_LIBUSB
