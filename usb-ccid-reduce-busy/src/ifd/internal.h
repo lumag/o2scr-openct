@@ -177,8 +177,8 @@ extern int ifd_sysdep_usb_claim_interface(ifd_device_t *, int);
 extern int ifd_sysdep_usb_release_interface(ifd_device_t *, int);
 extern int ifd_sysdep_usb_begin_capture(ifd_device_t *, int, int, size_t,
 					ifd_usb_capture_t **);
-extern int ifd_sysdep_usb_capture_event(ifd_device_t * dev, ifd_usb_capture_t * cap,
-			   void *buffer, size_t len);
+extern int ifd_sysdep_usb_capture_event(ifd_device_t *, ifd_usb_capture_t *,
+			   void *, size_t);
 extern int ifd_sysdep_usb_capture(ifd_device_t *, ifd_usb_capture_t *, void *,
 				  size_t, long);
 extern int ifd_sysdep_usb_end_capture(ifd_device_t *, ifd_usb_capture_t * cap);
