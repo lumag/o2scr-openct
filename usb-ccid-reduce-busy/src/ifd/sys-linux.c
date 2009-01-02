@@ -357,7 +357,6 @@ int ifd_sysdep_usb_capture_event(ifd_device_t * dev, ifd_usb_capture_t * cap,
 int ifd_sysdep_usb_capture(ifd_device_t * dev, ifd_usb_capture_t * cap,
 			   void *buffer, size_t len, long timeout)
 {
-	struct usbdevfs_urb *purb;
 	struct timeval begin;
 	size_t copied;
 	int rc = 0;
@@ -587,9 +586,16 @@ int ifd_scan_usb(void)
 								continue;
 							}
 
-							int bInterfaceClass = read_number ("%x", "%s/%s/%s/%s", base, ent->d_name, ent1->d_name, "bInterfaceClass");
-
-							if (bInterfaceClass == 0x0b) {
+							if (
+								read_number (
+									"%x",
+									"%s/%s/%s/%s",
+									base,
+									ent->d_name,
+									ent1->d_name,
+									"bInterfaceClass"
+								) == 0x0b
+							) {
 								driver = "ccid";
 							}
 						}
